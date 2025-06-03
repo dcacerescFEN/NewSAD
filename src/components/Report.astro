@@ -1,0 +1,46 @@
+<!-- Pestañas -->
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
+      Total Alumnos
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
+      Nuevos Alumnos
+    </button>
+  </li>
+</ul>
+
+
+<!-- Contenido de pestañas -->
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+    <iframe
+      src="https://app.powerbi.com/view?r=eyJrIjoiZjg5Y2Q2ZDAtZDBkNC00NGJjLWI0ZjYtMTFmMzZlMjZmNTE4IiwidCI6IjM2YjZkNDEzLTNiNmYtNDgxYS1iYzlkLTY2ODliNTExY2FmYSIsImMiOjR9"
+      style="width: 100%; height: 700px; border: none;"
+      title="Facultad de Economía y Negocios"
+    ></iframe>
+  </div>
+
+  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+    <iframe
+      data-src="https://app.powerbi.com/view?r=eyJrIjoiZTBlMGI5MGItYjQ5Zi00YzU1LTljZjQtYjlmYzI5NTQzYzYwIiwidCI6IjM2YjZkNDEzLTNiNmYtNDgxYS1iYzlkLTY2ODliNTExY2FmYSIsImMiOjR9"
+      style="width: 100%; height: 800px; border: none;"
+      title="Facultad de Economía y Negocios"
+    ></iframe>
+  </div>
+</div>
+
+<!-- Script para cargar deferido -->
+<script is:raw>
+  document.addEventListener('DOMContentLoaded', function () {
+    const tabTrigger = document.getElementById('profile-tab');
+    tabTrigger.addEventListener('shown.bs.tab', function () {
+      const iframe = document.querySelector('#profile-tab-pane iframe');
+      if (iframe && !iframe.src) {
+        iframe.src = iframe.dataset.src;
+      }
+    });
+  });
+</script>

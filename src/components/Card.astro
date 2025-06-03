@@ -1,0 +1,22 @@
+---
+// Props que recibe la tarjeta
+const {
+  title = "Título de la tarjeta",
+  text = "Texto de ejemplo para esta tarjeta.",
+  icon = "bi bi-card-text",
+  color = "bg-primary-light",
+  link = "#"
+} = Astro.props;
+---
+
+<div class={`card ${color} text-white`} >
+    <a href={link} class="text-decoration-none text-white">
+        <div class="card-body d-flex align-items-center justify-content-between">
+            <i class={icon} style="font-size: 2rem; margin-right: 1rem;"></i>
+            <div>
+                <h5 class="card-title">{title}</h5>
+                <p class="card-text">{text}</p>
+            </div>
+        </div>
+    </a>
+</div>

@@ -1,0 +1,23 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+
+.bg-primary {
+  background-color: #003087 !important;
+}
+
+.bg-primary-light {
+  background-color: #0246A2 !important;
+}
+
+.bg-primary-light:hover {
+  background-color: #025BB6 !important;
+}
+
+.bg-danger {
+  background-color: #C8102E !important;
+}
+
+.bg-danger:hover {
+  background-color: #D81E32 !important;
+}
