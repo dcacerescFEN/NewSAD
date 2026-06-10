@@ -9,8 +9,11 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^6.3.1",
-    "bootstrap": "^5.3.6",
+    "astro": "^6.4.5",
+    "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1"
+  },
+  "devDependencies": {
+    "sass": "^1.100.0"
   }
 }
