@@ -1,4 +1,9 @@
+packages:
+  - src/Web/WebUI
+
 allowBuilds:
   '@parcel/watcher': true
   esbuild: true
+  lmdb: true
+  msgpackr-extract: true
   sharp: true

@@ -1,0 +1,77 @@
+@use 'variables' as vars;
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+:root {
+  --primary-blue: #{vars.$primary-blue};
+  --primary-blue-deep: #{vars.$primary-blue-deep};
+  --layout-background: #f4f7fb;
+  --layout-surface: rgba(255, 255, 255, 0.82);
+  --layout-surface-strong: #ffffff;
+  --layout-text: #1e2b3c;
+  --layout-muted-text: #607086;
+  --layout-border-color: rgba(214, 223, 235, 0.9);
+  --card-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+  --card-radius: 1rem;
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --primary-blue: #295ea4;
+  --primary-blue-deep: #0d1b3d;
+  --layout-background: #0e1525;
+  --layout-surface: rgba(17, 24, 39, 0.84);
+  --layout-surface-strong: #111827;
+  --layout-text: #e5edf8;
+  --layout-muted-text: #b5c3d6;
+  --layout-border-color: rgba(76, 95, 126, 0.7);
+  color-scheme: dark;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--layout-background);
+  color: var(--layout-text);
+  font-family: Inter, system-ui, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+a {
+  color: inherit;
+}
+
+.card,
+.dropdown-menu,
+.tooltip-inner {
+  background-color: var(--layout-surface-strong);
+  color: var(--layout-text);
+}
+
+.card,
+.dropdown-menu {
+  border-color: var(--layout-border-color);
+}
+
+.card {
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+}
+
+.dropdown-item {
+  color: var(--layout-text);
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus,
+.dropdown-item.active {
+  background-color: color-mix(in srgb, var(--primary-blue) 12%, var(--layout-surface-strong));
+  color: var(--layout-text);
+}
+
+.tooltip-inner {
+  border: 1px solid var(--layout-border-color);
+}

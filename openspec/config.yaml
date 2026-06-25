@@ -1,0 +1,75 @@
+schema: spec-driven
+
+project:
+  name: NewSAD
+  branch: feat/newsad-dotnet-angular-migration
+  persistence: openspec
+
+context: |
+  Current stack: Astro 6, TypeScript strict config, SCSS, Bootstrap 5.
+  Current state: single-page portal shell with shared layout, navigation, and Power BI embeds.
+  Target architecture: migrate to SADAlumnos-style .NET backend plus Angular frontend.
+  Auth constraint: reuse the SADAlumnos local DB authorization model together with Keycloak authentication.
+  Workflow: interactive execution, chained PR strategy ask-always, review budget 400 lines.
+
+strict_tdd: false
+
+testing:
+  detected: 2026-06-25
+  strict_tdd_mode: disabled
+  notes:
+    - No test runner is declared in package.json.
+    - No test files or test configuration files were detected in the repository.
+    - TypeScript strict mode is configured, but no dedicated type-check command is exposed.
+    - Tool execution from this shell is currently blocked because Node.js is not available on PATH.
+  test_runner:
+    available: false
+    framework: ""
+    command: ""
+  layers:
+    unit:
+      available: false
+      tool: ""
+    integration:
+      available: false
+      tool: ""
+    e2e:
+      available: false
+      tool: ""
+  coverage:
+    available: false
+    command: ""
+  quality:
+    linter:
+      available: false
+      command: ""
+    type_checker:
+      available: false
+      command: ""
+    formatter:
+      available: false
+      command: ""
+
+rules:
+  proposal:
+    - Align the migration plan with SADAlumnos structure and naming.
+    - Include migration impact and rollback notes for Astro-to-.NET/Angular replacement.
+  specs:
+    - Use Given/When/Then for scenarios.
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY).
+  design:
+    - Reference SADAlumnos layering and frontend/backend boundaries explicitly.
+    - Document how local DB authorization and Keycloak authentication interact.
+  tasks:
+    - Group tasks by backend, frontend, auth/data, and migration phases.
+    - Keep tasks reviewable within the 400-line review budget when possible.
+  apply:
+    - Follow existing repository patterns until SADAlumnos-aligned structure is introduced.
+    tdd: false
+    test_command: ""
+  verify:
+    test_command: ""
+    build_command: ""
+    coverage_threshold: 0
+  archive:
+    - Warn before removing Astro-only requirements that still lack migrated equivalents.
