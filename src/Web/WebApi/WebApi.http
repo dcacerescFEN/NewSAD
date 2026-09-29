@@ -1,0 +1,88 @@
+﻿@WebApi_HostAddress = https://localhost:7070
+
+POST {{WebApi_HostAddress}}/api/Security/account/AdminLogin
+Content-Type: application/json
+
+{
+  //AdminLoginRequestCommand
+}
+
+###
+
+POST {{WebApi_HostAddress}}/api/Security/account/RefreshToken
+Content-Type: application/json
+
+{
+  //UpdateRefreshTokenCommand
+}
+
+###
+
+POST {{WebApi_HostAddress}}/api/Security/account/UserLogin
+Content-Type: application/json
+
+{
+  //UserLoginRequestCommand
+}
+
+###
+
+POST {{WebApi_HostAddress}}/api/Security/roles/CreateRole
+Content-Type: application/json
+
+{
+  //CreateRoleCommand
+}
+
+###
+
+GET {{WebApi_HostAddress}}/api/Security/roles/GetRoleById/0
+
+###
+
+GET {{WebApi_HostAddress}}/api/Security/roles/GetRoles
+
+###
+
+DELETE {{WebApi_HostAddress}}/api/Security/roles/ToggleRole/0
+
+###
+
+PUT {{WebApi_HostAddress}}/api/Security/roles/UpdateRole/0
+Content-Type: application/json
+
+{
+  //UpdateRoleCommand
+}
+
+###
+
+POST {{WebApi_HostAddress}}/api/Security/users/CreateUser
+Content-Type: application/json
+
+{
+  //CreateUserCommand
+}
+
+###
+
+GET {{WebApi_HostAddress}}/api/Security/users/GetUserById/0
+
+###
+
+GET {{WebApi_HostAddress}}/api/Security/users/GetUsers
+
+###
+
+DELETE {{WebApi_HostAddress}}/api/Security/users/ToggleUser/0
+
+###
+
+PUT {{WebApi_HostAddress}}/api/Security/users/UpdateUser/0
+Content-Type: application/json
+
+{
+  //UpdateUserCommand
+}
+
+###

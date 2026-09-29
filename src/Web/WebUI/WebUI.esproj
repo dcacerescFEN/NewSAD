@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.127-alpha">
+  <PropertyGroup>
+    <StartupCommand>pnpm start</StartupCommand>
+    <BuildCommand>pnpm build</BuildCommand>
+    <JavaScriptTestFramework>Vitest</JavaScriptTestFramework>
+    <!-- Desactiva npm install automático -->
+    <ShouldRunNpmInstall>false</ShouldRunNpmInstall>
+    <!-- Allows the build (or compile) script located on package.json to run on Build -->
+    <ShouldRunBuildScript>false</ShouldRunBuildScript>
+    <!-- Folder where production build objects will be placed -->
+    <PublishAssetsDirectory>$(MSBuildProjectDirectory)\dist\webui\browser</PublishAssetsDirectory>
+  </PropertyGroup>
+
+  <!-- Instalar pnpm globalmente si no está disponible -->
+  <Target Name="EnsurePnpm" BeforeTargets="BeforeRestore">
+    <Exec Command="pnpm --version"
+          IgnoreExitCode="true"
+          ConsoleToMSBuild="true">
+      <Output TaskParameter="ExitCode" PropertyName="PnpmExitCode" />
+    </Exec>
+    <Exec Command="npm install -g pnpm"
+          Condition="'$(PnpmExitCode)' != '0'" />
+  </Target>
+
+  <!-- Instalar dependencias con pnpm -->
+  <Target Name="PnpmInstall" BeforeTargets="BeforeRestore" AfterTargets="EnsurePnpm">
+    <Exec Command="pnpm install" WorkingDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
+</Project>

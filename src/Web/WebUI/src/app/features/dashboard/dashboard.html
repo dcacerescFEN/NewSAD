@@ -1,0 +1,31 @@
+<ul class="nav nav-tabs app-tabs" role="tablist" aria-label="Reportes de alumnos" (keydown)="onTabKeydown($event, totalTab, newTab)">
+    <li class="nav-item" role="presentation">
+        <button #totalTab class="nav-link app-tab" type="button" role="tab" id="total-students-tab"
+            aria-controls="total-students-panel" [attr.aria-selected]="selectedTab() === 'total'"
+            [tabIndex]="selectedTab() === 'total' ? 0 : -1" (click)="selectTab('total')">
+            <i class="bi bi-people-fill me-2" aria-hidden="true"></i>Total Alumnos
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button #newTab class="nav-link app-tab" type="button" role="tab" id="new-students-tab"
+            aria-controls="new-students-panel" [attr.aria-selected]="selectedTab() === 'new'"
+            [tabIndex]="selectedTab() === 'new' ? 0 : -1" (click)="selectTab('new')">
+            <i class="bi bi-person-plus-fill me-2" aria-hidden="true"></i>Nuevos Alumnos
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content app-tab-content">
+    <div class="tab-pane" [class.active]="selectedTab() === 'total'" [hidden]="selectedTab() !== 'total'"
+        id="total-students-panel" role="tabpanel" aria-labelledby="total-students-tab" tabindex="0">
+        <iframe class="report-frame" src="https://app.powerbi.com/view?r=eyJrIjoiZjg5Y2Q2ZDAtZDBkNC00NGJjLWI0ZjYtMTFmMzZlMjZmNTE4IiwidCI6IjM2YjZkNDEzLTNiNmYtNDgxYS1iYzlkLTY2ODliNTExY2FmYSIsImMiOjR9"
+            title="Reporte de Total Alumnos"></iframe>
+    </div>
+    <div class="tab-pane" [class.active]="selectedTab() === 'new'" [hidden]="selectedTab() !== 'new'"
+        id="new-students-panel" role="tabpanel" aria-labelledby="new-students-tab" tabindex="0">
+        @if (hasOpenedNewReport()) {
+            <iframe class="report-frame" src="https://app.powerbi.com/view?r=eyJrIjoiZTBlMGI5MGItYjQ5Zi00YzU1LTljZjQtYjlmYzI5NTQzYzYwIiwidCI6IjM2YjZkNDEzLTNiNmYtNDgxYS1iYzlkLTY2ODliNTExY2FmYSIsImMiOjR9"
+                title="Reporte de Nuevos Alumnos"></iframe>
+        }
+    </div>
+</div>
