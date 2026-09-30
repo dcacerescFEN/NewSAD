@@ -18,7 +18,7 @@ export const routes: Routes = [
         path: '',
         loadComponent: () => import('./core/layout/layout').then(m => m.Layout),
         canActivate: [authGuard, permissionGuard],
-        data: { permission: PERMISSIONS.STUDENTS_ENTER },
+        data: { permission: PERMISSIONS.SAD_ENTER },
         children: [
             {
                 path: '',

@@ -5,17 +5,17 @@ import { AuthStore } from '../../../features/auth/services/auth-store';
 import { Impersonation } from '../../../features/admin/services/impersonation';
 import { ThemePreference, ThemeStore } from '../../stores/theme-store';
 import { ConfigStore } from '../../stores/config-store';
-import { MenuDestinations } from '../../models/site-config';
+import { SiteConfig } from '../../models/site-config';
 
-const moduleLinks: { key: keyof MenuDestinations; label: string; icon: string }[] = [
-  { key: 'alumnos', label: 'Alumnos', icon: 'bi-person-badge' },
-  { key: 'profesores', label: 'Profesores', icon: 'bi-person-lines-fill' },
-  { key: 'cursos', label: 'Cursos', icon: 'bi-book' },
-  { key: 'examenes', label: 'Exámenes', icon: 'bi-clipboard-check' },
-  { key: 'actividades', label: 'Actividades', icon: 'bi-calendar-event' },
-  { key: 'ayudantes', label: 'Ayudantes', icon: 'bi-people' },
-  { key: 'procesos', label: 'Procesos', icon: 'bi-gear' },
-  { key: 'administracion', label: 'Administración', icon: 'bi-shield-lock' },
+const moduleLinks: { key: keyof SiteConfig; label: string; icon: string }[] = [
+  { key: 'studentsMenuUrl', label: 'Alumnos', icon: 'bi-person-badge' },
+  { key: 'teachersMenuUrl', label: 'Profesores', icon: 'bi-person-lines-fill' },
+  { key: 'coursesMenuUrl', label: 'Cursos', icon: 'bi-book' },
+  { key: 'examsMenuUrl', label: 'Exámenes', icon: 'bi-clipboard-check' },
+  { key: 'activitiesMenuUrl', label: 'Actividades', icon: 'bi-calendar-event' },
+  { key: 'assistantsMenuUrl', label: 'Ayudantes', icon: 'bi-people' },
+  { key: 'processesMenuUrl', label: 'Procesos', icon: 'bi-gear' },
+  { key: 'administrationMenuUrl', label: 'Administración', icon: 'bi-shield-lock' },
 ];
 
 
@@ -38,9 +38,9 @@ const moduleLinks: { key: keyof MenuDestinations; label: string; icon: string }[
       <div class="collapse navbar-collapse" [ngbCollapse]="isMenuCollapsed">
         <ul class="navbar-nav me-auto">
              @for (item of moduleLinks; track item.key) {
-             @if (item.key !== 'administracion' || (authStore.hasGlobalAccess() && !authStore.isImpersonating())) {
+             @if (item.key !== 'administrationMenuUrl' || (authStore.hasGlobalAccess() && !authStore.isImpersonating())) {
                <li class="nav-item">
-                 @if (configStore.config().menu[item.key]; as destination) {
+                 @if (configStore.config()[item.key]; as destination) {
                    <a class="nav-link header-nav-link" [href]="destination" (click)="closeMenu()">
                      <i class="bi" [class]="item.icon"></i><span>{{ item.label }}</span>
                    </a>

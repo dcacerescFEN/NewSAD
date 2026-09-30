@@ -2,13 +2,12 @@ namespace Application.Common.Models;
 
 public record SiteConfigDto
 {
-    public string DefaultSemester { get; init; } = default!;
-    public string DefaultSemesterPostgraduate { get; init; } = default!;
-    public string[] PregraduateStudentTypes { get; init; } = default!;
-    public string[] AcademicSituationsForModifyGrades { get; init; } = [];
-    public string[] SpecialGradeRecordAllowedAcademicSituations { get; init; } = [];
-    public string[] OtherRequestTypesWithoutReason { get; init; } = [];
-    public string[] AdminProcessingAllowedTypes { get; init; } = [];
-    public string FileAttachmentExcludedRequestType { get; init; } = default!;
-    public ConfigSite.MenuDestinations Menu { get; init; } = new("", "", "", "", "", "", "", "");
+    public string StudentsMenuUrl { get; init; } = default!;
+    public string TeachersMenuUrl { get; init; } = default!;
+    public string CoursesMenuUrl { get; init; } = default!;
+    public string ExamsMenuUrl { get; init; } = default!;
+    public string ActivitiesMenuUrl { get; init; } = default!;
+    public string AssistantsMenuUrl { get; init; } = default!;
+    public string ProcessesMenuUrl { get; init; } = default!;
+    public string AdministrationMenuUrl { get; init; } = default!;
 }

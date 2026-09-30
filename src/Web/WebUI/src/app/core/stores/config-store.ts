@@ -1,18 +1,17 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { MenuDestinations, SiteConfig } from '../models/site-config';
+import { SiteConfig } from '../models/site-config';
 import { SiteConfigService } from '../services/site-config';
 
 const EMPTY_CONFIG: SiteConfig = {
-  menu: { alumnos: '', profesores: '', cursos: '', examenes: '', actividades: '', ayudantes: '', procesos: '', administracion: '' },
-  defaultSemester: '',
-  defaultSemesterPostgraduate: '',
-  pregraduateStudentTypes: [],
-  academicSituationsForModifyGrades: [],
-  specialGradeRecordAllowedAcademicSituations: [],
-  otherRequestTypesWithoutReason: [],
-  adminProcessingAllowedTypes: [],
-  fileAttachmentExcludedRequestType: '',
+  studentsMenuUrl: '',
+  teachersMenuUrl: '',
+  coursesMenuUrl: '',
+  examsMenuUrl: '',
+  activitiesMenuUrl: '',
+  assistantsMenuUrl: '',
+  processesMenuUrl: '',
+  administrationMenuUrl: ''
 };
 
 @Injectable({
@@ -64,16 +63,7 @@ export class ConfigStore {
     }
   }
 
-  isPregraduateStudentType(studentType: string | null | undefined): boolean {
-    if (!studentType) {
-      return false;
-    }
-
-    return this.state().pregraduateStudentTypes.some(type => type.toUpperCase() === studentType.toUpperCase());
-  }
-
   private normalize(config: Partial<SiteConfig>): SiteConfig {
-    const menu = config.menu;
     const safeUrl = (value: unknown): string => {
       if (typeof value !== 'string') return '';
       const trimmed = value.trim();
@@ -86,30 +76,15 @@ export class ConfigStore {
         return '';
       }
     };
-    const normalizedMenu: MenuDestinations = {
-      alumnos: safeUrl(menu?.alumnos),
-      profesores: safeUrl(menu?.profesores),
-      cursos: safeUrl(menu?.cursos),
-      examenes: safeUrl(menu?.examenes),
-      actividades: safeUrl(menu?.actividades),
-      ayudantes: safeUrl(menu?.ayudantes),
-      procesos: safeUrl(menu?.procesos),
-      administracion: safeUrl(menu?.administracion),
-    };
     return {
-      menu: normalizedMenu,
-      defaultSemester: config.defaultSemester ?? '',
-      defaultSemesterPostgraduate: config.defaultSemesterPostgraduate ?? '',
-      pregraduateStudentTypes: this.normalizeArray(config.pregraduateStudentTypes),
-      academicSituationsForModifyGrades: this.normalizeArray(config.academicSituationsForModifyGrades),
-      specialGradeRecordAllowedAcademicSituations: this.normalizeArray(config.specialGradeRecordAllowedAcademicSituations),
-      otherRequestTypesWithoutReason: this.normalizeArray(config.otherRequestTypesWithoutReason),
-      adminProcessingAllowedTypes: this.normalizeArray(config.adminProcessingAllowedTypes),
-      fileAttachmentExcludedRequestType: config.fileAttachmentExcludedRequestType ?? '',
+      studentsMenuUrl: safeUrl(config.studentsMenuUrl),
+      teachersMenuUrl: safeUrl(config.teachersMenuUrl),
+      coursesMenuUrl: safeUrl(config.coursesMenuUrl),
+      examsMenuUrl: safeUrl(config.examsMenuUrl),
+      activitiesMenuUrl: safeUrl(config.activitiesMenuUrl),
+      assistantsMenuUrl: safeUrl(config.assistantsMenuUrl),
+      processesMenuUrl: safeUrl(config.processesMenuUrl),
+      administrationMenuUrl: safeUrl(config.administrationMenuUrl),
     };
-  }
-
-  private normalizeArray(values: string[] | undefined): string[] {
-    return Array.isArray(values) ? values.filter(Boolean) : [];
   }
 }

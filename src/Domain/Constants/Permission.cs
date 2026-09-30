@@ -2,5 +2,5 @@
 
 public abstract class Permission
 {
-    public const string SADEnter = "SAD_INGRESAR";
+    public const string SAD_Enter = "SAD_INGRESAR";
 }

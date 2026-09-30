@@ -14,17 +14,12 @@ builder.Services.AddWebApiServices(builder.Configuration);
 
 builder.Services.AddEndpoints(typeof(Program).Assembly);
 
-ConfigSite.ApplicationName = builder.Configuration.GetSection("ConfigureSite").GetSection("ApplicationName").Value!;
-ConfigSite.EnvironmentName = builder.Configuration.GetSection("ConfigureSite").GetSection("EnvironmentName").Value!;
-
-
-
 var app = builder.Build();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-await app.InitialiseConfigurationAsync();
+await app.InitialiseConfigurationAsync(builder.Configuration);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

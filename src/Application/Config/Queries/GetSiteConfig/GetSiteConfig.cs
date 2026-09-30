@@ -10,10 +10,14 @@ public class GetSiteConfigHandler(IApiResponseService responseService) : IReques
     {
         var config = new SiteConfigDto
         {
-            DefaultSemester = ConfigSite.DefaultSemester,
-            DefaultSemesterPostgraduate = ConfigSite.DefaultSemesterPosgraduate,
-            PregraduateStudentTypes = ConfigSite.PregraduateStudentTypes,
-            Menu = ConfigSite.Menu,
+            StudentsMenuUrl = ConfigSite.StudentsMenuUrl,
+            TeachersMenuUrl = ConfigSite.TeachersMenuUrl,
+            CoursesMenuUrl = ConfigSite.CoursesMenuUrl,
+            ExamsMenuUrl = ConfigSite.ExamsMenuUrl,
+            ActivitiesMenuUrl = ConfigSite.ActivitiesMenuUrl,
+            AssistantsMenuUrl = ConfigSite.AssistantsMenuUrl,
+            ProcessesMenuUrl = ConfigSite.ProcessesMenuUrl,
+            AdministrationMenuUrl = ConfigSite.AdministrationMenuUrl,
         };
 
         return Task.FromResult(_responseService.Success(config));

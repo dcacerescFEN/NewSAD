@@ -11,7 +11,7 @@ public class ConfigEndpoints : IEndpoint
             .WithTags("Config");
 
         group.MapGet("/site", GetSiteConfig)
-            .RequireAuthorization(Domain.Constants.Permission.SADEnter);
+            .RequireAuthorization(Domain.Constants.Permission.SAD_Enter);
     }
 
     [EndpointSummary("Obtiene configuración inicial del sitio")]
