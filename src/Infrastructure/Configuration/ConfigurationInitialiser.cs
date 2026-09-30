@@ -37,14 +37,14 @@ public class ConfigurationInitialiser(ILogger<ConfigurationInitialiser> logger, 
                 applicationName,
                 environmentName,
                 configurations.Find(x => x.ConfigurationName.Equals("StatusSite", StringComparison.CurrentCultureIgnoreCase))?.ConfigurationValue ?? "1",
-                configurations.Find(x => x.ConfigurationName.Equals("StudentsMenuUrl", StringComparison.CurrentCultureIgnoreCase))?.ConfigurationValue ?? "https://sadalumnos-dev.fen.uchile.cl",
-                configurations.Find(x => x.ConfigurationName.Equals("TeachersMenuUrl", StringComparison.CurrentCultureIgnoreCase))?.ConfigurationValue ?? "https://sadprofesores-dev.fen.uchile.cl",
-                configurations.Find(x => x.ConfigurationName.Equals("CoursesMenuUrl", StringComparison.CurrentCultureIgnoreCase))?.ConfigurationValue ?? "https://sadcursos-dev.fen.uchile.cl",
-                configurations.Find(x => x.ConfigurationName.Equals("ExamsMenuUrl", StringComparison.CurrentCultureIgnoreCase))?.ConfigurationValue ?? "https://sadexamenes-dev.fen.uchile.cl",
-                configurations.Find(x => x.ConfigurationName.Equals("ActivitiesMenuUrl", StringComparison.CurrentCultureIgnoreCase))?.ConfigurationValue ?? "https://sadactividades-dev.fen.uchile.cl",
-                configurations.Find(x => x.ConfigurationName.Equals("AssistantsMenuUrl", StringComparison.CurrentCultureIgnoreCase))?.ConfigurationValue ?? "https://sadasistentes-dev.fen.uchile.cl",
-                configurations.Find(x => x.ConfigurationName.Equals("ProcessesMenuUrl", StringComparison.CurrentCultureIgnoreCase))?.ConfigurationValue ?? "https://sadprocesos-dev.fen.uchile.cl",
-                configurations.Find(x => x.ConfigurationName.Equals("AdministrationMenuUrl", StringComparison.CurrentCultureIgnoreCase))?.ConfigurationValue ?? "https://sadadministracion-dev.fen.uchile.cl"
+                ResolveMenuUrl(configurations, "StudentsMenuUrl", "https://sadalumnos-dev.fen.uchile.cl"),
+                ResolveMenuUrl(configurations, "TeachersMenuUrl", "https://sadprofesores-dev.fen.uchile.cl"),
+                ResolveMenuUrl(configurations, "CoursesMenuUrl", "https://sadcursos-dev.fen.uchile.cl"),
+                ResolveMenuUrl(configurations, "ExamsMenuUrl", "https://sadexamenes-dev.fen.uchile.cl"),
+                ResolveMenuUrl(configurations, "ActivitiesMenuUrl", "https://sadactividades-dev.fen.uchile.cl"),
+                ResolveMenuUrl(configurations, "AssistantsMenuUrl", "https://sadasistentes-dev.fen.uchile.cl"),
+                ResolveMenuUrl(configurations, "ProcessesMenuUrl", "https://sadprocesos-dev.fen.uchile.cl"),
+                ResolveMenuUrl(configurations, "AdministrationMenuUrl", "https://sadadministracion-dev.fen.uchile.cl")
             );
         }
         catch (Exception ex)
@@ -53,4 +53,7 @@ public class ConfigurationInitialiser(ILogger<ConfigurationInitialiser> logger, 
             throw;
         }
     }
+
+    internal static string ResolveMenuUrl(List<Domain.Entities.AppConfig.Configuration> activeConfigurations, string key, string fallback) =>
+        activeConfigurations.Find(x => x.ConfigurationName.Equals(key, StringComparison.CurrentCultureIgnoreCase))?.ConfigurationValue ?? fallback;
 }

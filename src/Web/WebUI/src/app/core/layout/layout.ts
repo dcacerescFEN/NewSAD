@@ -28,10 +28,8 @@ import { Footer } from './components/footer';
     }
 
     app-header {
-      position: fixed;
+      position: sticky;
       top: 0;
-      left: 0;
-      right: 0;
       z-index: 101;
       display: block;
     }
@@ -41,13 +39,13 @@ import { Footer } from './components/footer';
       flex: 1 1 auto;
       min-height: 0;
       position: relative;
-      margin-top: 56px;
+      margin-top: 60px;
     }
 
     .layout-content {
       flex: 1 1 auto;
       min-width: 0;
-      min-height: calc(100dvh - 56px);
+      min-height: calc(100dvh - 60px);
       display: flex;
       flex-direction: column;
       gap: 0;

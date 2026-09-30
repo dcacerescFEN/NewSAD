@@ -6,31 +6,27 @@ namespace Application;
 public class ConfigurationInitialiserMenuTests
 {
     [Fact]
-    public void DuplicateActiveKeysAreUnavailableRegardlessOfRowOrder()
+    public void ResolvesCurrentMenuKeyIgnoringCase()
     {
-        var first = Row("MenuAlumnosUrl", "https://example.org/first");
-        var second = Row("menualumnosurl", "https://example.org/second");
+        var activeRows = new List<Configuration> { Row("studentsmenuurl", "https://example.org/students") };
 
-        Assert.Equal(string.Empty, ConfigurationInitialiser.ResolveMenuUrl([first, second], "MenuAlumnosUrl"));
-        Assert.Equal(string.Empty, ConfigurationInitialiser.ResolveMenuUrl([second, first], "MenuAlumnosUrl"));
-        Assert.Equal(string.Empty, ConfigurationInitialiser.ResolveMenuUrl([first, Row("MenuAlumnosUrl", "https://example.org/third")], "MenuAlumnosUrl"));
+        Assert.Equal("https://example.org/students",
+            ConfigurationInitialiser.ResolveMenuUrl(activeRows, "StudentsMenuUrl", "fallback"));
     }
 
     [Fact]
-    public void MissingAndInactiveKeysAreUnavailableButAnInactiveDuplicateDoesNotHideTheActiveKey()
+    public void MissingKeyUsesFallback()
     {
-        var active = Row("MenuAlumnosUrl", "https://example.org/alumnos");
-        var inactive = Row("menualumnosurl", "https://example.org/inactive", false);
+        var activeRows = new List<Configuration> { Row("TeachersMenuUrl", "https://example.org/teachers") };
 
-        Assert.Equal(string.Empty, ConfigurationInitialiser.ResolveMenuUrl([], "MenuAlumnosUrl"));
-        Assert.Equal(string.Empty, ConfigurationInitialiser.ResolveMenuUrl([inactive], "MenuAlumnosUrl"));
-        Assert.Equal(active.ConfigurationValue, ConfigurationInitialiser.ResolveMenuUrl([inactive, active], "MenuAlumnosUrl"));
+        Assert.Equal("fallback", ConfigurationInitialiser.ResolveMenuUrl(activeRows, "StudentsMenuUrl", "fallback"));
+        Assert.Equal("fallback", ConfigurationInitialiser.ResolveMenuUrl([], "StudentsMenuUrl", "fallback"));
     }
 
-    private static Configuration Row(string key, string value, bool isActive = true) => new()
+    private static Configuration Row(string key, string value) => new()
     {
         ConfigurationName = key,
         ConfigurationValue = value,
-        IsActive = isActive
+        IsActive = true
     };
 }
