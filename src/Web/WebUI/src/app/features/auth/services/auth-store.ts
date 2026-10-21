@@ -28,6 +28,9 @@ export class AuthStore {
   readonly hasGlobalAccess = computed(() =>
     this.getRoles().some((role) => role === ROLES.ADMIN || role === ROLES.SUPERADMIN),
   );
+  // El estándar reserva la suplantación al rol SUPERADMIN del módulo, así que la interfaz
+  // necesita distinguirlo en lugar de tratarlo como un acceso global más.
+  readonly isSuperAdmin = computed(() => this.getRoles().some((role) => role === ROLES.SUPERADMIN));
 
   setKeycloak(keycloak: Keycloak, clientId: string): void {
     this.keycloakSignal.set(keycloak);

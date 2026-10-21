@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Application.Common.Interfaces;
-using Domain.Constants;
 using WebApi.Authentication;
 using WebApi.Services;
 
@@ -12,7 +11,7 @@ public sealed class AuthEndpoints : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/auth/impersonation", StartImpersonation)
-            .RequireAuthorization(policy => policy.RequireAuthenticatedUser().RequireRole(Roles.Administrator, Roles.SuperAdmin))
+            .RequireAuthorization(ImpersonationPolicy.Name)
             .WithTags("Authentication");
         app.MapDelete("/api/auth/impersonation", StopImpersonation).RequireAuthorization().WithTags("Authentication");
     }

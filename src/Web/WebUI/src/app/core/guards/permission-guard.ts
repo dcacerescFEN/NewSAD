@@ -9,9 +9,18 @@ export const permissionGuard: CanActivateFn = (route) => {
   const permission = route.data['permission'] as string | undefined;
   const permissions = route.data['permissions'] as string[] | undefined;
   const globalAccessOnly = route.data['globalAccessOnly'] === true;
+  const superAdminOnly = route.data['superAdminOnly'] === true;
 
   if (route.data['keycloakOnly'] && authStore.isImpersonating?.()) {
     return router.parseUrl('/forbidden');
+  }
+
+  // La suplantación de usuarios está reservada al rol SUPERADMIN del módulo: ADMIN conserva el
+  // acceso completo a su módulo, pero no puede abrir el panel de suplantación.
+  if (superAdminOnly) {
+    return authStore.isSuperAdmin()
+      ? true
+      : router.parseUrl('/forbidden');
   }
 
   if (globalAccessOnly) {

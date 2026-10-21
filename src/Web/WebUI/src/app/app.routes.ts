@@ -12,13 +12,13 @@ export const routes: Routes = [
         path: 'admin',
         loadComponent: () => import('./features/admin/admin').then(m => m.Admin),
         canActivate: [authGuard, permissionGuard],
-        data: { globalAccessOnly: true, keycloakOnly: true },
+        data: { superAdminOnly: true, keycloakOnly: true },
     },
     {
         path: '',
         loadComponent: () => import('./core/layout/layout').then(m => m.Layout),
         canActivate: [authGuard, permissionGuard],
-        data: { permission: PERMISSIONS.SAD_ENTER },
+        data: { permission: PERMISSIONS.SAD_ACCESS },
         children: [
             {
                 path: '',
