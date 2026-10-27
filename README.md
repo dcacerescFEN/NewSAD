@@ -26,6 +26,8 @@ existentes. Las claves activas corresponden a la aplicación y ambiente configur
 | `AdministrationMenuClientId` | `SADAdministracion` |
 
 `ReportsMenuUrl` usa `https://sadinformes-dev.fen.uchile.cl` como valor predeterminado.
+El destino de Ayudantes usa `https://sadayudantes-dev.fen.uchile.cl` como valor
+predeterminado, coherente con el cliente `SADAyudantes`.
 Configurar explícitamente el cliente con sufijo `-iis` cuando corresponda al destino;
 no se infiere desde la URL ni se combinan sus permisos con el cliente sin sufijo.
 Reiniciar la API para recargar AppConfig. Esta integración solo lee configuración:
