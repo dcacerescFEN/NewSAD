@@ -121,7 +121,9 @@ public static class ConfigureServices
         services.AddSingleton<Authentication.IImpersonationContextStore, Authentication.ImpersonationContextStore>();
         services.AddMemoryCache();
         services.AddHttpClient();
-        services.AddAuthorization();
+        services.AddAuthorization(options => options.AddPolicy(
+            Authentication.ImpersonationPolicy.Name,
+            Authentication.ImpersonationPolicy.Create()));
         services.AddAuthentication(options =>
         {
             options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;

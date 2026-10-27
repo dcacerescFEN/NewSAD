@@ -20,9 +20,13 @@ public static class KeycloakClaimsMapper
     public static bool HasPermissionOrGlobalAccess(ClaimsPrincipal user, string permission) =>
         HasGlobalAccess(user) || user.HasClaim(PermissionsClaimType, permission);
 
-    /// <summary>Determines whether the current effective principal can initiate an impersonation.</summary>
+    /// <summary>
+    /// Determines whether the current effective principal can initiate an impersonation. The
+    /// standard reserves impersonation to the module SUPERADMIN role: the module ADMIN role has
+    /// full access inside its own module but cannot operate as another user.
+    /// </summary>
     public static bool CanStartImpersonation(ClaimsPrincipal user) =>
-        !user.HasClaim(IsImpersonatedClaimType, "true") && HasGlobalAccess(user);
+        !user.HasClaim(IsImpersonatedClaimType, "true") && user.IsInRole(Roles.SuperAdmin);
 
     public static void Map(ClaimsIdentity identity, string clientId)
     {
