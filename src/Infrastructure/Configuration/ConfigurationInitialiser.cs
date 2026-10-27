@@ -42,9 +42,19 @@ public class ConfigurationInitialiser(ILogger<ConfigurationInitialiser> logger, 
                 ResolveMenuUrl(configurations, "CoursesMenuUrl", "https://sadcursos-dev.fen.uchile.cl"),
                 ResolveMenuUrl(configurations, "ExamsMenuUrl", "https://sadexamenes-dev.fen.uchile.cl"),
                 ResolveMenuUrl(configurations, "ActivitiesMenuUrl", "https://sadactividades-dev.fen.uchile.cl"),
-                ResolveMenuUrl(configurations, "AssistantsMenuUrl", "https://sadasistentes-dev.fen.uchile.cl"),
+                ResolveMenuUrl(configurations, "AssistantsMenuUrl", "https://sadayudantes-dev.fen.uchile.cl"),
                 ResolveMenuUrl(configurations, "ProcessesMenuUrl", "https://sadprocesos-dev.fen.uchile.cl"),
-                ResolveMenuUrl(configurations, "AdministrationMenuUrl", "https://sadadministracion-dev.fen.uchile.cl")
+                ResolveMenuUrl(configurations, "AdministrationMenuUrl", "https://sadadministracion-dev.fen.uchile.cl"),
+                ResolveMenuUrl(configurations, "StudentsMenuClientId", "SADAlumnos"),
+                ResolveMenuUrl(configurations, "TeachersMenuClientId", "SADProfesores"),
+                ResolveMenuUrl(configurations, "CoursesMenuClientId", "SADCursos"),
+                ResolveMenuUrl(configurations, "ExamsMenuClientId", "SADExamenes"),
+                ResolveMenuUrl(configurations, "ActivitiesMenuClientId", "SADActividades"),
+                ResolveMenuUrl(configurations, "AssistantsMenuClientId", "SADAyudantes"),
+                ResolveMenuUrl(configurations, "ProcessesMenuClientId", "SADProcesos"),
+                ResolveMenuUrl(configurations, "AdministrationMenuClientId", "SADAdministracion"),
+                ResolveMenuUrl(configurations, "ReportsMenuUrl", "https://sadinformes-dev.fen.uchile.cl"),
+                ResolveMenuUrl(configurations, "ReportsMenuClientId", "SADInformes")
             );
         }
         catch (Exception ex)

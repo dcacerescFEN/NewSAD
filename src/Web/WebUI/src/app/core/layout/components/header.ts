@@ -7,15 +7,16 @@ import { ThemePreference, ThemeStore } from '../../stores/theme-store';
 import { ConfigStore } from '../../stores/config-store';
 import { SiteConfig } from '../../models/site-config';
 
-const moduleLinks: { key: keyof SiteConfig; label: string; icon: string }[] = [
-  { key: 'studentsMenuUrl', label: 'Alumnos', icon: 'bi-person-badge' },
-  { key: 'teachersMenuUrl', label: 'Profesores', icon: 'bi-person-lines-fill' },
-  { key: 'coursesMenuUrl', label: 'Cursos', icon: 'bi-book' },
-  { key: 'examsMenuUrl', label: 'Exámenes', icon: 'bi-clipboard-check' },
-  { key: 'activitiesMenuUrl', label: 'Actividades', icon: 'bi-calendar-event' },
-  { key: 'assistantsMenuUrl', label: 'Ayudantes', icon: 'bi-people' },
-  { key: 'processesMenuUrl', label: 'Procesos', icon: 'bi-gear' },
-  { key: 'administrationMenuUrl', label: 'Administración', icon: 'bi-shield-lock' },
+const moduleLinks: { key: keyof SiteConfig; clientIdKey: keyof SiteConfig; label: string; icon: string }[] = [
+  { key: 'studentsMenuUrl', clientIdKey: 'studentsMenuClientId', label: 'Alumnos', icon: 'bi-person-badge' },
+  { key: 'teachersMenuUrl', clientIdKey: 'teachersMenuClientId', label: 'Profesores', icon: 'bi-person-lines-fill' },
+  { key: 'coursesMenuUrl', clientIdKey: 'coursesMenuClientId', label: 'Cursos', icon: 'bi-book' },
+  { key: 'examsMenuUrl', clientIdKey: 'examsMenuClientId', label: 'Exámenes', icon: 'bi-clipboard-check' },
+  { key: 'activitiesMenuUrl', clientIdKey: 'activitiesMenuClientId', label: 'Actividades', icon: 'bi-calendar-event' },
+  { key: 'assistantsMenuUrl', clientIdKey: 'assistantsMenuClientId', label: 'Ayudantes', icon: 'bi-people' },
+  { key: 'processesMenuUrl', clientIdKey: 'processesMenuClientId', label: 'Procesos', icon: 'bi-gear' },
+  { key: 'reportsMenuUrl', clientIdKey: 'reportsMenuClientId', label: 'Informes', icon: 'bi-file-earmark-bar-graph' },
+  { key: 'administrationMenuUrl', clientIdKey: 'administrationMenuClientId', label: 'Administración', icon: 'bi-shield-lock' },
 ];
 
 
@@ -38,14 +39,14 @@ const moduleLinks: { key: keyof SiteConfig; label: string; icon: string }[] = [
       <div class="collapse navbar-collapse" [ngbCollapse]="isMenuCollapsed">
         <ul class="navbar-nav me-auto">
              @for (item of moduleLinks; track item.key) {
-             @if (item.key !== 'administrationMenuUrl' || (authStore.hasGlobalAccess() && !authStore.isImpersonating())) {
+             @if (canViewModule(item)) {
                <li class="nav-item">
                  @if (configStore.config()[item.key]; as destination) {
                    <a class="nav-link header-nav-link" [href]="destination" (click)="closeMenu()">
                      <i class="bi" [class]="item.icon"></i><span>{{ item.label }}</span>
                    </a>
                  } @else {
-                   <span class="nav-link header-nav-link" aria-disabled="true" [attr.aria-label]="item.label + ' no disponible'" title="No disponible">
+                   <span class="nav-link header-nav-link" aria-disabled="true" tabindex="-1" [attr.aria-label]="item.label + ' no disponible'" title="No disponible">
                      <i class="bi" [class]="item.icon"></i><span>{{ item.label }}</span>
                    </span>
                  }
@@ -253,6 +254,14 @@ export class Header {
   protected readonly authStore = inject(AuthStore);
   protected readonly configStore = inject(ConfigStore);
   protected readonly moduleLinks = moduleLinks;
+
+  /** Cada destino se muestra solo con acceso al cliente físico exacto configurado. */
+  protected canViewModule(item: typeof moduleLinks[number]): boolean {
+    const clientId = this.configStore.config()[item.clientIdKey];
+    return typeof clientId === 'string' && clientId.length > 0
+      && this.authStore.hasSiteAccess(clientId);
+  }
+
   private readonly impersonation = inject(Impersonation);
   private router = inject(Router);
   readonly themeStore = inject(ThemeStore);

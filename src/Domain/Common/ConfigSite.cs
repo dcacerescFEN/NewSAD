@@ -13,7 +13,17 @@ public static class ConfigSite
         string ActivitiesMenuUrl,
         string AssistantsMenuUrl,
         string ProcessesMenuUrl,
-        string AdministrationMenuUrl);
+        string AdministrationMenuUrl,
+        string? StudentsMenuClientId,
+        string? TeachersMenuClientId,
+        string? CoursesMenuClientId,
+        string? ExamsMenuClientId,
+        string? ActivitiesMenuClientId,
+        string? AssistantsMenuClientId,
+        string? ProcessesMenuClientId,
+        string? AdministrationMenuClientId,
+        string ReportsMenuUrl,
+        string? ReportsMenuClientId);
 
     private static Settings? _settings;
 
@@ -33,6 +43,17 @@ public static class ConfigSite
     public static string AssistantsMenuUrl => Current.AssistantsMenuUrl;
     public static string ProcessesMenuUrl => Current.ProcessesMenuUrl;
     public static string AdministrationMenuUrl => Current.AdministrationMenuUrl;
+    public static string ReportsMenuUrl => Current.ReportsMenuUrl;
+
+    public static string? StudentsMenuClientId => Current.StudentsMenuClientId;
+    public static string? TeachersMenuClientId => Current.TeachersMenuClientId;
+    public static string? CoursesMenuClientId => Current.CoursesMenuClientId;
+    public static string? ExamsMenuClientId => Current.ExamsMenuClientId;
+    public static string? ActivitiesMenuClientId => Current.ActivitiesMenuClientId;
+    public static string? AssistantsMenuClientId => Current.AssistantsMenuClientId;
+    public static string? ProcessesMenuClientId => Current.ProcessesMenuClientId;
+    public static string? AdministrationMenuClientId => Current.AdministrationMenuClientId;
+    public static string? ReportsMenuClientId => Current.ReportsMenuClientId;
 
     public static void Initialize(
         string applicationName,
@@ -45,7 +66,17 @@ public static class ConfigSite
         string activitiesMenuUrl,
         string assistantsMenuUrl,
         string processesMenuUrl,
-        string administrationMenuUrl)
+        string administrationMenuUrl,
+        string? studentsMenuClientId = null,
+        string? teachersMenuClientId = null,
+        string? coursesMenuClientId = null,
+        string? examsMenuClientId = null,
+        string? activitiesMenuClientId = null,
+        string? assistantsMenuClientId = null,
+        string? processesMenuClientId = null,
+        string? administrationMenuClientId = null,
+        string reportsMenuUrl = "",
+        string? reportsMenuClientId = null)
     {
         var settings = new Settings(
             applicationName,
@@ -58,7 +89,17 @@ public static class ConfigSite
             activitiesMenuUrl,
             assistantsMenuUrl,
             processesMenuUrl,
-            administrationMenuUrl);
+            administrationMenuUrl,
+            studentsMenuClientId,
+            teachersMenuClientId,
+            coursesMenuClientId,
+            examsMenuClientId,
+            activitiesMenuClientId,
+            assistantsMenuClientId,
+            processesMenuClientId,
+            administrationMenuClientId,
+            reportsMenuUrl,
+            reportsMenuClientId);
 
         Volatile.Write(ref _settings, settings);
     }
