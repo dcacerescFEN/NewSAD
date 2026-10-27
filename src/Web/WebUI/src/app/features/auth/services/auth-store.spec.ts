@@ -21,6 +21,109 @@ function createStore(clientValues: string[], otherClientValues: string[] = []): 
   return store;
 }
 
+const sites = [
+  ['NewSAD', 'SAD', 'SAD_ACCESS'],
+  ['SADAlumnos', 'STUDENT', 'STUDENT_ACCESS_STUDENT_MODULE'],
+  ['SADInformes', 'REPORT', 'REPORT_ACCESS'],
+  ['SADAdministracion', 'ADMINISTRATION', 'ADMINISTRATION_ACCESS'],
+  ['SADProfesores', 'TEACHER', undefined],
+  ['SADCursos', 'COURSE', undefined],
+  ['SADExamenes', 'EXAM', undefined],
+  ['SADActividades', 'ACTIVITY', undefined],
+  ['SADAyudantes', 'ASSISTANT', undefined],
+  ['SADProcesos', 'PROCESS', undefined],
+] as const;
+
+function destinationStore(resourceAccess: unknown, authenticated = true): AuthStore {
+  const store = new AuthStore();
+  store.setKeycloak({
+    authenticated,
+    tokenParsed: { resource_access: resourceAccess },
+  } as unknown as Keycloak, 'NewSAD');
+  return store;
+}
+
+describe('AuthStore destination access', () => {
+  for (const [client, module, permission] of sites) {
+    for (const suffix of ['', '-iis']) {
+      const target = client + suffix;
+      it.each(['ADMIN', 'SUPERADMIN'])('accepts %s of ' + target, role => {
+        const store = destinationStore({ [target]: { roles: [`ROLE_${module}_${role}`] } });
+        expect(store.hasSiteAccess(target)).toBe(true);
+        expect(store.hasSiteAccess(target + '-desconocido')).toBe(false);
+      });
+      if (permission) {
+        it('accepts only entry permission of ' + target, () => {
+          expect(destinationStore({ [target]: { roles: ['PERMISSION_' + permission] } })
+            .hasSiteAccess(target)).toBe(true);
+        });
+      }
+      it('denies ' + target + ' from sibling physical client alone', () => {
+        const other = suffix ? client : client + '-iis';
+        expect(destinationStore({ [other]: { roles: [`ROLE_${module}_SUPERADMIN`] } })
+          .hasSiteAccess(target)).toBe(false);
+      });
+    }
+  }
+
+  it.each([
+    ['SADInformes', 'REPORT_ACCESS'],
+    ['SADInformes', 'ROLE_ADMIN'],
+    ['SADInformes', 'PERMISSION_REPORT_VIEW'],
+    ['SADAdministracion', 'ROLE_NEWSAD_ADMIN'],
+    ['SADProcesos', 'PERMISSION_PROCESS_ACCESS'],
+  ])('rejects unsupported %s / %s', (target, role) => {
+    expect(destinationStore({ [target]: { roles: [role] } }).hasSiteAccess(target)).toBe(false);
+  });
+
+  it.each([undefined, null, [], {}, 'bad', { SADInformes: null },
+    { SADInformes: { roles: 'PERMISSION_REPORT_ACCESS' } }])(
+    'denies missing or malformed access: %j', access => {
+      expect(destinationStore(access).hasSiteAccess('SADInformes')).toBe(false);
+    });
+
+  it.each(['__proto__', 'constructor', 'toString', 'SADInformes-iis-iis', ' SADInformes', 'SADInformes '])(
+    'denies non-policy or ambiguous client key %j', key => {
+      expect(destinationStore({ SADInformes: { roles: ['PERMISSION_REPORT_ACCESS'] } })
+        .hasSiteAccess(key)).toBe(false);
+    });
+
+  it('denies array resource_access and non-string role entries', () => {
+    expect(destinationStore([{ roles: ['PERMISSION_REPORT_ACCESS'] }]).hasSiteAccess('SADInformes'))
+      .toBe(false);
+    expect(destinationStore({ SADInformes: { roles: [1] } }).hasSiteAccess('SADInformes'))
+      .toBe(false);
+  });
+
+  it('requires authenticated session and known client', () => {    expect(new AuthStore().hasSiteAccess('SADInformes')).toBe(false);
+    expect(destinationStore({ SADInformes: { roles: ['PERMISSION_REPORT_ACCESS'] } }, false)
+      .hasSiteAccess('SADInformes')).toBe(false);
+    expect(destinationStore({ desconocido: { roles: ['ROLE_REPORT_SUPERADMIN'] } })
+      .hasSiteAccess('desconocido')).toBe(false);
+  });
+
+  it('during impersonation only the active physical client is evaluated', () => {
+    const store = destinationStore({
+      NewSAD: { roles: ['ROLE_SAD_SUPERADMIN'] },
+      SADInformes: { roles: ['PERMISSION_REPORT_ACCESS'] },
+      SADAdministracion: { roles: ['PERMISSION_ADMINISTRATION_ACCESS'] },
+    });
+    store.setImpersonation({ userName: 'test', roles: [], permissions: [] });
+    expect(store.hasSiteAccess('NewSAD')).toBe(false);
+    expect(store.hasSiteAccess('SADInformes')).toBe(false);
+    expect(store.hasSiteAccess('SADAdministracion')).toBe(false);
+    store.setImpersonation({ userName: 'test', roles: ['SAD_ADMIN'], permissions: [] });
+    expect(store.hasSiteAccess('NewSAD')).toBe(true);
+    expect(store.hasSiteAccess('NewSAD-iis')).toBe(false);
+    expect(store.hasSiteAccess('SADInformes')).toBe(false);
+    store.setImpersonation({ userName: 'test', roles: [], permissions: ['SAD_ACCESS'] });
+    expect(store.hasSiteAccess('NewSAD')).toBe(true);
+    store.stopImpersonation();
+    expect(store.hasSiteAccess('SADInformes')).toBe(true);
+    expect(store.hasSiteAccess('SADAdministracion')).toBe(true);
+  });
+});
+
 describe('AuthStore global access', () => {
   it.each(['ROLE_ADMIN', 'ROLE_SUPERADMIN'])(
     'allows %s without the required permission',

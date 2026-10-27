@@ -10,6 +10,25 @@ interface KeycloakResourceAccess {
   [clientId: string]: KeycloakClientAccess;
 }
 
+interface SiteAccessPolicy {
+  module: string;
+  permission?: string;
+}
+
+// Los permisos de entrada no confirmados se omiten: no se infieren equivalencias.
+const SITE_ACCESS_POLICIES = new Map<string, SiteAccessPolicy>([
+  ['NewSAD', { module: 'SAD', permission: 'SAD_ACCESS' }],
+  ['SADAlumnos', { module: 'STUDENT', permission: 'STUDENT_ACCESS_STUDENT_MODULE' }],
+  ['SADInformes', { module: 'REPORT', permission: 'REPORT_ACCESS' }],
+  ['SADAdministracion', { module: 'ADMINISTRATION', permission: 'ADMINISTRATION_ACCESS' }],
+  ['SADProfesores', { module: 'TEACHER' }],
+  ['SADCursos', { module: 'COURSE' }],
+  ['SADExamenes', { module: 'EXAM' }],
+  ['SADActividades', { module: 'ACTIVITY' }],
+  ['SADAyudantes', { module: 'ASSISTANT' }],
+  ['SADProcesos', { module: 'PROCESS' }],
+]);
+
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
   private readonly keycloakSignal = signal<Keycloak | null>(null);
@@ -61,6 +80,36 @@ export class AuthStore {
 
   hasPermission(permission: string): boolean {
     return this.hasGlobalAccess() || this.getPermissions().includes(permission);
+  }
+
+  /**
+   * Consulta el cliente físico exacto del destino, sin mezclarlo con su variante -iis.
+   * En suplantación solo se autoriza el cliente activo con los permisos efectivos.
+   */
+  hasSiteAccess(clientId: string): boolean {
+    if (!this.isAuthenticated()) return false;
+
+    const logicalId = clientId.endsWith('-iis') ? clientId.slice(0, -4) : clientId;
+    const policy = SITE_ACCESS_POLICIES.get(logicalId);
+    if (!policy) return false;
+
+    const impersonation = this.impersonationSignal();
+    if (impersonation) {
+      if (clientId !== this.clientIdSignal()) return false;
+      return impersonation.roles.includes(policy.module + '_ADMIN')
+        || impersonation.roles.includes(policy.module + '_SUPERADMIN')
+        || (policy.permission !== undefined && impersonation.permissions.includes(policy.permission));
+    }
+
+    const access: unknown = this.keycloakSignal()?.tokenParsed?.['resource_access'];
+    if (!this.isResourceAccess(access) || !Object.prototype.hasOwnProperty.call(access, clientId))
+      return false;
+    const roles = access[clientId]?.roles;
+    if (!Array.isArray(roles)) return false;
+
+    return roles.includes('ROLE_' + policy.module + '_ADMIN')
+      || roles.includes('ROLE_' + policy.module + '_SUPERADMIN')
+      || (policy.permission !== undefined && roles.includes('PERMISSION_' + policy.permission));
   }
 
   private getPermissions(): string[] {
