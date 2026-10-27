@@ -4,6 +4,16 @@ import { SiteConfig } from '../models/site-config';
 import { SiteConfigService } from '../services/site-config';
 
 const EMPTY_CONFIG: SiteConfig = {
+  studentsMenuClientId: '',
+  teachersMenuClientId: '',
+  coursesMenuClientId: '',
+  examsMenuClientId: '',
+  activitiesMenuClientId: '',
+  assistantsMenuClientId: '',
+  processesMenuClientId: '',
+  administrationMenuClientId: '',
+  reportsMenuClientId: '',
+  reportsMenuUrl: '',
   studentsMenuUrl: '',
   teachersMenuUrl: '',
   coursesMenuUrl: '',
@@ -76,7 +86,18 @@ export class ConfigStore {
         return '';
       }
     };
+    const exactClientId = (value: unknown): string => typeof value === 'string' ? value : '';
     return {
+      studentsMenuClientId: exactClientId(config.studentsMenuClientId),
+      teachersMenuClientId: exactClientId(config.teachersMenuClientId),
+      coursesMenuClientId: exactClientId(config.coursesMenuClientId),
+      examsMenuClientId: exactClientId(config.examsMenuClientId),
+      activitiesMenuClientId: exactClientId(config.activitiesMenuClientId),
+      assistantsMenuClientId: exactClientId(config.assistantsMenuClientId),
+      processesMenuClientId: exactClientId(config.processesMenuClientId),
+      administrationMenuClientId: exactClientId(config.administrationMenuClientId),
+      reportsMenuClientId: exactClientId(config.reportsMenuClientId),
+      reportsMenuUrl: safeUrl(config.reportsMenuUrl),
       studentsMenuUrl: safeUrl(config.studentsMenuUrl),
       teachersMenuUrl: safeUrl(config.teachersMenuUrl),
       coursesMenuUrl: safeUrl(config.coursesMenuUrl),

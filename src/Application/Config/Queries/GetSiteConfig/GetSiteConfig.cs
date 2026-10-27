@@ -10,6 +10,16 @@ public class GetSiteConfigHandler(IApiResponseService responseService) : IReques
     {
         var config = new SiteConfigDto
         {
+            StudentsMenuClientId = ConfigSite.StudentsMenuClientId,
+            TeachersMenuClientId = ConfigSite.TeachersMenuClientId,
+            CoursesMenuClientId = ConfigSite.CoursesMenuClientId,
+            ExamsMenuClientId = ConfigSite.ExamsMenuClientId,
+            ActivitiesMenuClientId = ConfigSite.ActivitiesMenuClientId,
+            AssistantsMenuClientId = ConfigSite.AssistantsMenuClientId,
+            ProcessesMenuClientId = ConfigSite.ProcessesMenuClientId,
+            AdministrationMenuClientId = ConfigSite.AdministrationMenuClientId,
+            ReportsMenuClientId = ConfigSite.ReportsMenuClientId,
+            ReportsMenuUrl = ConfigSite.ReportsMenuUrl,
             StudentsMenuUrl = ConfigSite.StudentsMenuUrl,
             TeachersMenuUrl = ConfigSite.TeachersMenuUrl,
             CoursesMenuUrl = ConfigSite.CoursesMenuUrl,
