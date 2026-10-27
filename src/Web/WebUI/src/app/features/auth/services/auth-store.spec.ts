@@ -96,6 +96,17 @@ describe('AuthStore destination access', () => {
       .toBe(false);
   });
 
+  it('REPORT access never crosses between SADInformes and SADInformes-iis', () => {
+    for (const [granted, queried] of [
+      ['SADInformes', 'SADInformes-iis'],
+      ['SADInformes-iis', 'SADInformes'],
+    ]) {
+      const store = destinationStore({ [granted]: { roles: ['PERMISSION_REPORT_ACCESS', 'ROLE_REPORT_ADMIN'] } });
+      expect(store.hasSiteAccess(granted)).toBe(true);
+      expect(store.hasSiteAccess(queried)).toBe(false);
+    }
+  });
+
   it('requires authenticated session and known client', () => {    expect(new AuthStore().hasSiteAccess('SADInformes')).toBe(false);
     expect(destinationStore({ SADInformes: { roles: ['PERMISSION_REPORT_ACCESS'] } }, false)
       .hasSiteAccess('SADInformes')).toBe(false);
