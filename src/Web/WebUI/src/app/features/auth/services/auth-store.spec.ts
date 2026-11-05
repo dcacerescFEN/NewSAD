@@ -134,6 +134,48 @@ describe('AuthStore destination access', () => {
     expect(store.hasSiteAccess('SADInformes')).toBe(true);
     expect(store.hasSiteAccess('SADAdministracion')).toBe(true);
   });
+
+  it('during impersonation uses the impersonated access of each physical destination', () => {
+    const store = destinationStore({
+      NewSAD: { roles: ['ROLE_SAD_SUPERADMIN'] },
+      SADAlumnos: { roles: ['ROLE_STUDENT_SUPERADMIN'] },
+      SADInformes: { roles: ['PERMISSION_REPORT_ACCESS'] },
+    });
+    store.setImpersonation({
+      userName: 'test',
+      roles: [],
+      permissions: ['SAD_ACCESS'],
+      siteAccess: {
+        NewSAD: { roles: [], permissions: ['SAD_ACCESS'] },
+        'SADInformes-iis': { roles: ['REPORT_ADMIN'], permissions: [] },
+        SADAlumnos: { roles: [], permissions: [] },
+      },
+    });
+    expect(store.hasSiteAccess('NewSAD')).toBe(true);
+    expect(store.hasSiteAccess('SADInformes-iis')).toBe(true);
+    expect(store.hasSiteAccess('SADInformes')).toBe(false);
+    expect(store.hasSiteAccess('SADAlumnos')).toBe(false);
+    expect(store.hasSiteAccess('SADAdministracion')).toBe(false);
+    store.stopImpersonation();
+    expect(store.hasSiteAccess('SADInformes')).toBe(true);
+    expect(store.hasSiteAccess('SADAlumnos')).toBe(true);
+  });
+
+  it('during impersonation denies absent, malformed and prototype site access entries', () => {
+    const store = destinationStore({ SADInformes: { roles: ['PERMISSION_REPORT_ACCESS'] } });
+    store.setImpersonation({
+      userName: 'test',
+      roles: ['SAD_ADMIN'],
+      permissions: ['SAD_ACCESS'],
+      siteAccess: {
+        SADInformes: { roles: 'REPORT_ADMIN' } as unknown as { roles: string[]; permissions: string[] },
+      },
+    });
+    expect(store.hasSiteAccess('SADInformes')).toBe(false);
+    expect(store.hasSiteAccess('NewSAD')).toBe(false);
+    expect(store.hasSiteAccess('constructor')).toBe(false);
+    expect(store.hasSiteAccess('__proto__')).toBe(false);
+  });
 });
 
 describe('AuthStore global access', () => {

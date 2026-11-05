@@ -27,4 +27,14 @@ public sealed record ImpersonationTarget(
     string UserId,
     string UserName,
     IReadOnlyCollection<string> Roles,
+    IReadOnlyCollection<string> Permissions)
+{
+    /// <summary>Access per physical client, used only to decide which menu links the target may see.</summary>
+    public IReadOnlyDictionary<string, ImpersonationSiteAccess> SiteAccess { get; init; }
+        = new Dictionary<string, ImpersonationSiteAccess>(StringComparer.Ordinal);
+}
+
+/// <summary>Effective roles and permissions of a single physical menu destination.</summary>
+public sealed record ImpersonationSiteAccess(
+    IReadOnlyCollection<string> Roles,
     IReadOnlyCollection<string> Permissions);

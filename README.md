@@ -60,10 +60,11 @@ acceso global de NewSAD. Ahora todos los destinos exigen autorización propia, y
 Administración usa la misma política que los demás. Un usuario sin acceso al
 destino deja de ver ese enlace.
 
-Durante una suplantación solo se evalúa el cliente activo con las autorizaciones
-efectivas del usuario suplantado; los permisos del usuario real no habilitan
-enlaces a otros sistemas. Como NewSAD no es un destino de su propia barra, la
-barra queda vacía mientras se suplanta a un usuario. Un destino autorizado sin
+Durante una suplantación cada destino se evalúa con los roles y permisos efectivos
+que el usuario suplantado tiene en ese cliente físico exacto, resueltos por el
+servidor en `siteAccess` al iniciar la suplantación; los privilegios del usuario
+real nunca habilitan enlaces. Una respuesta sin `siteAccess` conserva el
+comportamiento anterior: solo el cliente activo. Un destino autorizado sin
 URL válida se muestra deshabilitado, fuera de la tabulación y sin `href`.
 
 Este cambio afecta únicamente la visibilidad de la barra. No modifica los guards

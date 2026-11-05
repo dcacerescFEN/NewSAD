@@ -32,7 +32,7 @@ public sealed class AuthEndpoints : IEndpoint
         {
             var target = await authService.GetImpersonationTargetAsync(request.UserName.Trim(), bearerToken, cancellationToken);
             impersonationContexts.Start(bearerToken, target, expiresAt);
-            return Results.Ok(new ImpersonationResponse(target.UserName, target.Roles, target.Permissions));
+            return Results.Ok(new ImpersonationResponse(target.UserName, target.Roles, target.Permissions, target.SiteAccess));
         }
         catch (ImpersonationException exception)
         {
@@ -68,5 +68,6 @@ public sealed class AuthEndpoints : IEndpoint
     }
 
     private sealed record ImpersonationRequest(string? UserName);
-    private sealed record ImpersonationResponse(string UserName, IReadOnlyCollection<string> Roles, IReadOnlyCollection<string> Permissions);
+    private sealed record ImpersonationResponse(string UserName, IReadOnlyCollection<string> Roles,
+        IReadOnlyCollection<string> Permissions, IReadOnlyDictionary<string, ImpersonationSiteAccess> SiteAccess);
 }

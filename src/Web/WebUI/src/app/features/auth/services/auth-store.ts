@@ -87,7 +87,8 @@ export class AuthStore {
 
   /**
    * Consulta el cliente físico exacto del destino, sin mezclarlo con su variante -iis.
-   * En suplantación solo se autoriza el cliente activo con los permisos efectivos.
+   * En suplantación usa el acceso efectivo que el servidor resolvió para cada destino;
+   * una respuesta sin siteAccess conserva el acceso exclusivo al cliente activo.
    */
   hasSiteAccess(clientId: string): boolean {
     if (!this.isAuthenticated()) return false;
@@ -98,10 +99,21 @@ export class AuthStore {
 
     const impersonation = this.impersonationSignal();
     if (impersonation) {
-      if (clientId !== this.clientIdSignal()) return false;
-      return impersonation.roles.includes(policy.module + '_ADMIN')
-        || impersonation.roles.includes(policy.module + '_SUPERADMIN')
-        || (policy.permission !== undefined && impersonation.permissions.includes(policy.permission));
+      const siteAccess: unknown = impersonation.siteAccess;
+      let effectiveAccess: unknown = impersonation;
+      if (siteAccess === undefined) {
+        if (clientId !== this.clientIdSignal()) return false;
+      } else {
+        if (typeof siteAccess !== 'object' || siteAccess === null || Array.isArray(siteAccess)
+          || !Object.prototype.hasOwnProperty.call(siteAccess, clientId)) return false;
+        effectiveAccess = (siteAccess as Record<string, unknown>)[clientId];
+      }
+      if (typeof effectiveAccess !== 'object' || effectiveAccess === null || Array.isArray(effectiveAccess)) return false;
+      const { roles, permissions } = effectiveAccess as { roles?: unknown; permissions?: unknown };
+      if (!Array.isArray(roles) || !Array.isArray(permissions)) return false;
+      return roles.includes(policy.module + '_ADMIN')
+        || roles.includes(policy.module + '_SUPERADMIN')
+        || (policy.permission !== undefined && permissions.includes(policy.permission));
     }
 
     const access: unknown = this.keycloakSignal()?.tokenParsed?.['resource_access'];
@@ -159,6 +171,12 @@ export class AuthStore {
 
 export interface ImpersonationContext {
   userName: string;
+  roles: string[];
+  permissions: string[];
+  siteAccess?: Record<string, ImpersonationSiteAccess>;
+}
+
+export interface ImpersonationSiteAccess {
   roles: string[];
   permissions: string[];
 }

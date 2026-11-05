@@ -11,7 +11,8 @@ public class AuthService(
     IHttpContextAccessor httpContextAccessor,
     IHttpClientFactory httpClientFactory,
     IConfiguration configuration,
-    ILogger<AuthService> logger) : IAuthService
+    ILogger<AuthService> logger,
+    ISiteMenuProvider menuProvider) : IAuthService
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
@@ -35,7 +36,27 @@ public class AuthService(
         var target = await GetTargetUserAsync(client, baseUrl, realm, userName, actorToken, cancellationToken);
         var clientUuid = await GetClientUuidAsync(client, baseUrl, realm, clientId, actorToken, cancellationToken);
         var roleNames = await GetEffectiveClientRolesAsync(client, baseUrl, realm, target.Id!, clientUuid, actorToken, cancellationToken);
-        return KeycloakClaimsMapper.NormalizeTarget(target.Id!, target.UserName!, roleNames);
+        var localTarget = KeycloakClaimsMapper.NormalizeTarget(target.Id!, target.UserName!, roleNames);
+        var siteAccess = new Dictionary<string, ImpersonationSiteAccess>(StringComparer.Ordinal)
+        {
+            [clientId] = new(localTarget.Roles, localTarget.Permissions),
+        };
+        var menu = menuProvider.GetMenu();
+        string?[] destinations = [menu.StudentsMenuClientId, menu.TeachersMenuClientId, menu.CoursesMenuClientId,
+            menu.ExamsMenuClientId, menu.ActivitiesMenuClientId, menu.AssistantsMenuClientId,
+            menu.ProcessesMenuClientId, menu.ReportsMenuClientId, menu.AdministrationMenuClientId];
+        foreach (var destination in destinations
+                     .Where(value => !string.IsNullOrWhiteSpace(value))
+                     .Select(value => value!)
+                     .Distinct(StringComparer.Ordinal))
+        {
+            if (siteAccess.ContainsKey(destination)) continue;
+            var destinationUuid = await GetClientUuidAsync(client, baseUrl, realm, destination, actorToken, cancellationToken);
+            var destinationRoles = await GetEffectiveClientRolesAsync(client, baseUrl, realm, target.Id!, destinationUuid, actorToken, cancellationToken);
+            var access = KeycloakClaimsMapper.NormalizeTarget(target.Id!, target.UserName!, destinationRoles);
+            siteAccess[destination] = new(access.Roles, access.Permissions);
+        }
+        return localTarget with { SiteAccess = siteAccess };
     }
 
     private (string BaseUrl, string Realm, string ClientId) GetKeycloakSettings()

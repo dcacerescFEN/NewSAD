@@ -17,6 +17,7 @@ public static class ConfigureServices
         services.AddScoped<IAppConfigContext>(provider => provider.GetRequiredService<AppConfigContext>());
 
         services.AddScoped<IApiResponseService, ApiResponseService>();
+        services.AddSingleton<ISiteMenuProvider, SiteMenuProvider>();
         services.AddScoped<ConfigurationInitialiser>();
 
         return services;
